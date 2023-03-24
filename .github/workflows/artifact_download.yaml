@@ -2,7 +2,7 @@ name: Download artifacts test
 
 on:
   push:
-    branches-ignore:
+    branches:
       - main
 
 jobs:
