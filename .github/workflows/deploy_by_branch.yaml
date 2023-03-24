@@ -1,6 +1,9 @@
 name: Deploy by branch
 
-on: push
+on:
+  push:
+    branches-ignore:
+      - main
 
 jobs:
   build:
