@@ -4,8 +4,8 @@ name: Deploy by branch v2
 
 on:
   push:
-    tags-ignore:
-      - v**
+    branches:
+      - "*"
   # release:
   #   types: [published]
 
