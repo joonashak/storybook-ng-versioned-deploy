@@ -4,8 +4,8 @@ name: Deploy by branch v2
 
 on:
   push:
-  release:
-    types: [published]
+  # release:
+  #   types: [published]
 
 jobs:
   build:
