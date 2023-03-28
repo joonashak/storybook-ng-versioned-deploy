@@ -5,7 +5,8 @@ name: Deploy by branch v2
 on:
   push:
     branches:
-      - "*"
+      - inactive
+  #    - "*"
   # release:
   #   types: [published]
 
