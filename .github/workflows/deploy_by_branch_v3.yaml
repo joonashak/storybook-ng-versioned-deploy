@@ -32,7 +32,9 @@ jobs:
         run: npm ci
         working-directory: app
       - name: Build
-        run: npm run build-storybook -- -o static
+        id: build
+        # run: npm run build-storybook -- -o static
+        run: exit 1
         working-directory: app
       - name: Deploy to Pages under branch name
         uses: peaceiris/actions-gh-pages@v3
@@ -53,7 +55,8 @@ jobs:
         env:
           REPO: ${{ github.repository }}
         run: echo "url=https://${{ github.repository_owner }}.github.io/${REPO##*/}/${{ github.ref_name }}" >> $GITHUB_OUTPUT
-      - name: Complete deployment
+      - name: Complete deployment (success)
+        if: steps.build.outcome == 'success'
         uses: octokit/request-action@v2.1.7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -64,3 +67,14 @@ jobs:
           environment: docs-${{ github.ref_name }}
           state: success
           environment_url: ${{ steps.url.outputs.url }}
+      - name: Complete deployment (failure)
+        if: steps.build.outcome == 'failure'
+        uses: octokit/request-action@v2.1.7
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          route: POST /repos/${{ github.repository }}/deployments/{deployment_id}/statuses
+          deployment_id: ${{ fromJson(steps.create-deployment.outputs.data).id }}
+          ref: ${{ github.ref_name }}
+          environment: docs-${{ github.ref_name }}
+          state: failure
