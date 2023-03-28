@@ -89,25 +89,25 @@ jobs:
       # pull-requests: write
     steps:
       - name: Complete deployment (success)
-        if: jobs.publish-storybook.status == 'success'
+        if: needs.publish-storybook.result == 'success'
         uses: octokit/request-action@v2.1.7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           route: POST /repos/${{ github.repository }}/deployments/{deployment_id}/statuses
-          deployment_id: ${{ jobs.create-deployment.outputs.deployment_id }}
+          deployment_id: ${{ needs.create-deployment.outputs.deployment_id }}
           ref: ${{ github.ref_name }}
           environment: docs-${{ github.ref_name }}
           state: success
-          environment_url: ${{ jobs.publish-storybook.outputs.url }}
+          environment_url: ${{ needs.publish-storybook.outputs.url }}
       - name: Complete deployment (failure)
-        if: jobs.publish-storybook.status == 'failure'
+        if: needs.publish-storybook.result == 'failure'
         uses: octokit/request-action@v2.1.7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           route: POST /repos/${{ github.repository }}/deployments/{deployment_id}/statuses
-          deployment_id: ${{ jobs.create-deployment.outputs.deployment_id }}
+          deployment_id: ${{ needs.create-deployment.outputs.deployment_id }}
           ref: ${{ github.ref_name }}
           environment: docs-${{ github.ref_name }}
           state: failure
