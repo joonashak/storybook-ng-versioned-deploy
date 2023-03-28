@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-22.04
     permissions:
       deployments: write
-      # pull-requests: write
     steps:
       - name: Create deployment
         uses: octokit/request-action@v2.1.7
@@ -41,8 +40,8 @@ jobs:
         working-directory: app
       - name: Build
         id: build
-        # run: npm run build-storybook -- -o static
-        run: exit 1
+        run: npm run build-storybook -- -o static
+        # run: exit 1
         working-directory: app
       - name: Deploy to Pages under branch name
         uses: peaceiris/actions-gh-pages@v3
@@ -75,7 +74,6 @@ jobs:
       - publish-storybook
     permissions:
       deployments: write
-      # pull-requests: write
     steps:
       - name: Complete deployment (success)
         if: needs.publish-storybook.result == 'success'
