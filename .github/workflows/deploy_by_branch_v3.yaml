@@ -30,6 +30,8 @@ jobs:
   publish-storybook:
     name: Build and deploy Storybook
     runs-on: ubuntu-22.04
+    needs:
+      - create-deployment
     permissions:
       contents: write
     steps:
@@ -50,7 +52,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: app/static
           destination_dir: ${{ github.ref_name }}
-          full_commit_message: ${{ github.sha }}/${{ github.ref_name }}
+          full_commit_message: ${{ needs.create-deployment.outputs.deployment_id }}/${{ github.ref_name }}
       # Optional deploy to 'latest'.
       # - name: Deploy to Pages under "latest" (optional)
       #   if: inputs.latest
@@ -77,18 +79,18 @@ jobs:
     permissions:
       deployments: write
     steps:
-      - name: Complete deployment (success)
-        if: needs.publish-storybook.result == 'success'
-        uses: octokit/request-action@v2.1.7
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          route: POST /repos/${{ github.repository }}/deployments/{deployment_id}/statuses
-          deployment_id: ${{ needs.create-deployment.outputs.deployment_id }}
-          ref: ${{ github.ref_name }}
-          environment: docs-${{ github.ref_name }}
-          state: success
-          environment_url: ${{ needs.publish-storybook.outputs.url }}
+      # - name: Complete deployment (success)
+      #   if: needs.publish-storybook.result == 'success'
+      #   uses: octokit/request-action@v2.1.7
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     route: POST /repos/${{ github.repository }}/deployments/{deployment_id}/statuses
+      #     deployment_id: ${{ needs.create-deployment.outputs.deployment_id }}
+      #     ref: ${{ github.ref_name }}
+      #     environment: docs-${{ github.ref_name }}
+      #     state: success
+      #     environment_url: ${{ needs.publish-storybook.outputs.url }}
       - name: Complete deployment (failure)
         if: needs.publish-storybook.result == 'failure'
         uses: octokit/request-action@v2.1.7
