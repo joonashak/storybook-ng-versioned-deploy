@@ -50,6 +50,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: app/static
           destination_dir: ${{ github.ref_name }}
+          full_commit_message: ${{ github.sha }}/${{ github.ref_name }}
       # Optional deploy to 'latest'.
       # - name: Deploy to Pages under "latest" (optional)
       #   if: inputs.latest
