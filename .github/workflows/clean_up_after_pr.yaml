@@ -9,6 +9,8 @@ jobs:
   remove-storybook:
     name: Remove Storybook site associated with closed PR
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
