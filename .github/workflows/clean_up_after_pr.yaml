@@ -35,5 +35,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           route: POST /repos/${{ github.repository }}/deployments/{deployment_id}/statuses
-          deployment_id: ${{ steps.parse-commit.outputs.id }}
+          deployment_id: ${{ steps.parse-commit.outputs.deployment_id }}
           state: inactive
