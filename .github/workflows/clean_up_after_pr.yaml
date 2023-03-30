@@ -1,0 +1,18 @@
+name: Clean up after PR closed
+
+on:
+  push:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  remove-storybook:
+    name: Remove Storybook site associated with closed PR
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+      - run: ls -la
