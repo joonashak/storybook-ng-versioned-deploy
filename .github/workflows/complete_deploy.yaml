@@ -18,6 +18,8 @@ jobs:
         with:
           text: ${{ github.event.workflow_run.head_commit.message }}
           regex: '^\d{9,}\/.+$'
+      - run: echo ${{ steps.regex.outputs.match }}
+      - run: echo ${{ steps.regex.outputs.match != '' }}
     outputs:
       new_deployment: ${{ steps.regex.outputs.match != '' }}
 
