@@ -26,7 +26,7 @@ jobs:
   update-environment:
     name: Update GH deployment status
     runs-on: ubuntu-22.04
-    if: needs.deployment-type.outputs.new_deployment == 'false'
+    if: needs.deployment-type.outputs.new_deployment == 'true'
     needs:
       - deployment-type
     permissions:
