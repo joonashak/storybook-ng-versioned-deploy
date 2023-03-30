@@ -8,9 +8,25 @@ on:
       - completed
 
 jobs:
+  deployment-type:
+    name: Figure out deployment type from commit
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Test commit message format with regex
+        uses: actions-ecosystem/action-regex-match@v2
+        id: regex
+        with:
+          text: ${{ github.event.workflow_run.head_commit.message }}
+          regex: '^\d{9,}\/.+$'
+    outputs:
+      new_deployment: ${{ steps.regex.outputs.match != '' }}
+
   update-environment:
     name: Update GH deployment status
     runs-on: ubuntu-22.04
+    if: needs.deployment-type.outputs.new_deployment
+    needs:
+      - deployment-type
     permissions:
       deployments: write
     steps:
